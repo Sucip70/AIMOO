@@ -5,10 +5,10 @@ import 'package:minimal/components/color.dart';
 // Simple
 TextStyle headlineTextStyle = GoogleFonts.montserrat(
     textStyle: const TextStyle(
-        fontSize: 26,
-        color: textPrimary,
+        fontSize: 46,
+        color: Color.fromARGB(255, 34, 58, 122),
         letterSpacing: 1.5,
-        fontWeight: FontWeight.w300));
+        fontWeight: FontWeight.w700));
 
 TextStyle headlineSecondaryTextStyle = GoogleFonts.montserrat(
     textStyle: const TextStyle(

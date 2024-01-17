@@ -1,17 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:minimal/firebase_options.dart';
 import 'package:minimal/pages/pages.dart';
+import 'package:minimal/providers/providers.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  runApp(MyApp(prefs: prefs));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({super.key, required this.prefs});
+
+  final SharedPreferences prefs;
+  final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(
+          create: (_) => AuthProvider(
+            firebaseAuth: FirebaseAuth.instance,
+            googleSignIn: GoogleSignIn(),
+            prefs: prefs,
+            firebaseFirestore: firebaseFirestore,
+          ),
+        ),
+        Provider<SettingProvider>(
+          create: (_) => SettingProvider(
+            prefs: prefs,
+            firebaseFirestore: firebaseFirestore,
+            firebaseStorage: firebaseStorage,
+          ),
+        ),
+        Provider<HomeProvider>(
+          create: (_) => HomeProvider(
+            firebaseFirestore: firebaseFirestore,
+          ),
+        ),
+        Provider<ChatProvider>(
+          create: (_) => ChatProvider(
+            prefs: prefs,
+            firebaseFirestore: firebaseFirestore,
+            firebaseStorage: firebaseStorage,
+          ),
+        ),
+      ],
+      child:
+    MaterialApp(
       // Wrapping the app with a builder method makes breakpoints
       // accessible throughout the widget tree.
       builder: (context, child) => ResponsiveBreakpoints.builder(
@@ -32,7 +79,7 @@ class MyApp extends StatelessWidget {
         });
       },
       debugShowCheckedModeBanner: false,
-    );
+    ));
   }
 
   // onGenerateRoute route switcher.
@@ -40,6 +87,8 @@ class MyApp extends StatelessWidget {
   Widget buildPage(String name) {
     switch (name) {
       case '/':
+      case SplashPage.name:
+        return SplashPage();
       case ListPage.name:
         return const ListPage();
       case PostPage.name:

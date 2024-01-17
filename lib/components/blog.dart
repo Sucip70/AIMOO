@@ -117,7 +117,7 @@ class ReadMoreButton extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: 12, vertical: 16)),
       ),
       child: const Text(
-        "READ MORE",
+        "SETUP",
       ),
     );
   }
@@ -263,8 +263,8 @@ class Footer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: const Align(
-        alignment: Alignment.centerRight,
-        child: TextBody(text: "Copyright © 2023"),
+        alignment: Alignment.bottomCenter,
+        child: TextBody(text: "Copyright © 2024"),
       ),
     );
   }
@@ -282,45 +282,74 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: <Widget>[
-        if (imageUrl != null)
-          ImageWrapper(
-            image: imageUrl!,
-          ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Container(
-            margin: marginBottom12,
-            child: Text(
-              title,
-              style: headlineTextStyle,
-            ),
-          ),
-        ),
-        if (description != null)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              margin: marginBottom12,
-              child: Text(
-                description!,
-                style: bodyTextStyle,
+        Container(
+          margin: const EdgeInsets.only(left: 50),
+          padding: const EdgeInsets.all(50),
+          width: 500,
+          child: 
+        Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                margin: marginBottom12,
+                child: 
+                RichText(text: TextSpan(
+                  text: 'Customer',
+                    style: headlineTextStyle,
+                  children: <TextSpan>[
+                    const TextSpan(
+                      text: " Chat BOT ",
+                      style: TextStyle(
+                        fontSize: 46,
+                        color: Color.fromARGB(255, 255, 92, 64),
+                        letterSpacing: 1.5,
+                        fontWeight: FontWeight.w700)),  
+                    TextSpan(
+                      text: "Services",
+                    style: headlineTextStyle,)
+                  ]
+                )) 
+                // Text(
+                //   title,
+                //   style: headlineTextStyle,
+                // ),
               ),
             ),
-          ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Container(
-            margin: marginBottom24,
-            child: ReadMoreButton(
-              onPressed: () => Navigator.pushNamed(context, PostPage.name),
+            if (description != null)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  margin: marginBottom12,
+                  child: Text(
+                    description!,
+                    style: bodyTextStyle,
+                  ),
+                ),
+              ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                margin: marginBottom24,
+                child: ReadMoreButton(
+                  onPressed: () => Navigator.pushNamed(context, PostPage.name),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
+        ),
+        if (imageUrl != null)
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.only(right: 100, top: 50),
+            child: Image.asset(imageUrl ?? '')
+          )
+        )
       ],
-    );
-  }
+    );}
 }
 
 // ignore: slash_for_doc_comments
@@ -340,7 +369,7 @@ class MinimalMenuBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Container(
-          margin: const EdgeInsets.symmetric(vertical: 30),
+          margin: const EdgeInsets.all(30),
           child: Row(
             children: <Widget>[
               InkWell(
@@ -349,12 +378,18 @@ class MinimalMenuBar extends StatelessWidget {
                 splashColor: Colors.transparent,
                 onTap: () => Navigator.popUntil(
                     context, ModalRoute.withName(Navigator.defaultRouteName)),
-                child: Text("MINIMAL",
-                    style: GoogleFonts.montserrat(
-                        color: textPrimary,
-                        fontSize: 30,
-                        letterSpacing: 3,
-                        fontWeight: FontWeight.w500)),
+                child: RichText(text: TextSpan(
+                  text: 'AI',
+                    style: GoogleFonts.montserrat(color: textPrimary, fontSize: 30, letterSpacing: 3, fontWeight: FontWeight.w500),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "M",
+                    style: GoogleFonts.montserrat(color: Colors.cyan, fontSize: 32, letterSpacing: 3, fontWeight: FontWeight.w500)),
+                    TextSpan(
+                      text: "OO",
+                    style: GoogleFonts.montserrat(color: textPrimary, fontSize: 30, letterSpacing: 3, fontWeight: FontWeight.w500)),
+                  ]
+                )) 
               ),
               Flexible(
                 child: Container(
@@ -373,7 +408,7 @@ class MinimalMenuBar extends StatelessWidget {
                         onPressed: () {},
                         style: menuButtonStyle,
                         child: const Text(
-                          "PORTFOLIO",
+                          "CHATBOT",
                         ),
                       ),
                       TextButton(
@@ -381,21 +416,7 @@ class MinimalMenuBar extends StatelessWidget {
                             Navigator.pushNamed(context, TypographyPage.name),
                         style: menuButtonStyle,
                         child: const Text(
-                          "STYLE",
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        style: menuButtonStyle,
-                        child: const Text(
-                          "ABOUT",
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        style: menuButtonStyle,
-                        child: const Text(
-                          "CONTACT",
+                          "ACCOUNT",
                         ),
                       ),
                     ],
@@ -407,7 +428,6 @@ class MinimalMenuBar extends StatelessWidget {
         ),
         Container(
             height: 1,
-            margin: const EdgeInsets.only(bottom: 30),
             color: const Color(0xFFEEEEEE)),
       ],
     );

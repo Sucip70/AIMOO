@@ -1,0 +1,31 @@
+class FirestoreConstants {
+  static const pathAICollection = "ai";
+  static const pathBotCollection = "chatbot";
+  static const pathUserCollection = "users";
+  static const pathMessageCollection = "messages";
+  static const nickname = "nickname";
+  static const aboutMe = "aboutMe";
+  static const photoUrl = "photoUrl";
+  static const id = "id";
+  static const chattingWith = "chattingWith";
+  static const idFrom = "idFrom";
+  static const idTo = "idTo";
+  static const timestamp = "timestamp";
+  static const content = "content";
+  static const type = "type";
+  static const endpoint = "endpoint";
+  static const isPublic = "is_public";
+  static const key = "key";
+  static const systemMessage = "system";
+  static const temperature = "temperature";
+  static const topP = "top_p";
+  static const frequencyPenalty = "frequency_penalty";
+  static const presencePenalty = "presence_penalty";
+  static const maxTokens = "max_tokens";
+  static const stop = "stop";
+  static const isSearchIndex = "is_search_index";
+  static const searchEndpoint = "search_endpoint";
+  static const searchKey = "search_key";
+  static const searchIndex = "search_index";
+  static const group = "group";
+}

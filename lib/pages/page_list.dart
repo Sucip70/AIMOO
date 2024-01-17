@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:minimal/components/components.dart';
 
 // TODO Replace with object model.
-const String listItemTitleText = "A BETTER BLOG FOR WRITING";
+const String listItemTitleText = "Customer Chat BOT Services";
 const String listItemPreviewText =
-    "Sed elementum tempus egestas sed sed risus. Mauris in aliquam sem fringilla ut morbi tincidunt. Placerat vestibulum lectus mauris ultrices eros. Et leo duis ut diam. Auctor neque vitae tempus […]";
+    "This is the place to test chat bots based on customer services. We use the addition of open AI to get humane and heartfelt answers. The web is built using the Flutter framework";
 
 class ListPage extends StatelessWidget {
   static const String name = 'list';
@@ -13,58 +13,31 @@ class ListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 32),
+          children: <Widget>[
+            SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  const MinimalMenuBar(),
-                  const ListItem(
+                  MinimalMenuBar(),
+                  ListItem(
                       imageUrl:
-                          "assets/images/paper_flower_overhead_bw_w1080.jpg",
+                          "assets/images/5124556.jpg",
                       title: listItemTitleText,
                       description: listItemPreviewText),
                   divider,
-                  const ListItem(
-                      imageUrl:
-                          "assets/images/iphone_cactus_tea_overhead_bw_w1080.jpg",
-                      title: listItemTitleText,
-                      description: listItemPreviewText),
-                  divider,
-                  const ListItem(
-                      imageUrl:
-                          "assets/images/typewriter_overhead_bw_w1080.jpg",
-                      title: listItemTitleText,
-                      description: listItemPreviewText),
-                  divider,
-                  const ListItem(
-                      imageUrl:
-                          "assets/images/coffee_paperclips_pencil_angled_bw_w1080.jpg",
-                      title: listItemTitleText,
-                      description: listItemPreviewText),
-                  divider,
-                  const ListItem(
-                      imageUrl:
-                          "assets/images/joy_note_coffee_eyeglasses_overhead_bw_w1080.jpg",
-                      title: listItemTitleText,
-                      description: listItemPreviewText),
-                  divider,
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 80),
-                    child: const ListNavigation(),
-                  ),
-                  divider,
-                  const Footer(),
+                 Footer(),
                 ],
               ),
+              // ),
             ),
-          ),
-        ],
-      ),
-      backgroundColor: Colors.white,
-    );
+            Positioned(
+              bottom: 0.0,
+              right: 20.0,
+              child: ChatBox()
+            )
+          ],
+        ),
+      );  
   }
 }
