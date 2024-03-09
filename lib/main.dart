@@ -1,5 +1,8 @@
+import 'package:azure_cosmosdb/azure_cosmosdb.dart';
 import 'package:flutter/material.dart';
+import 'package:minimal/constants/app_constants.dart';
 import 'package:minimal/firebase_options.dart';
+import 'package:minimal/models/cosmosdb_model.dart';
 import 'package:minimal/pages/pages.dart';
 import 'package:minimal/providers/providers.dart';
 import 'package:provider/provider.dart';
@@ -15,15 +18,43 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  
   runApp(MyApp(prefs: prefs));
 }
-
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  final SharedPreferences prefs;
   MyApp({super.key, required this.prefs});
 
-  final SharedPreferences prefs;
+  MyAppState createState () => MyAppState();
+}
+class MyAppState extends State<MyApp> {
+  final CosmosDbServer cosmosDbServer = CosmosDbServer(AppConstants.cosmoDB, masterKey: AppConstants.masterKey);
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+  late CosmosDbContainer cosmosDbContainer;
+
+  @override
+  void initState(){
+    _init();
+  }
+
+  Future _init () async {
+    final db = await cosmosDbServer.databases.open(AppConstants.database);
+    final indexingPolicy = IndexingPolicy(indexingMode: IndexingMode.consistent)
+      ..excludedPaths.add(IndexPath('/*'))
+      ..includedPaths.add(IndexPath('/"due-date"/?'))
+      ..compositeIndexes.add([
+        IndexPath('/label', order: IndexOrder.ascending),
+        IndexPath('/"due-date"', order: IndexOrder.descending)
+      ]);
+      try {
+        
+    cosmosDbContainer = await db.containers.openOrCreate("messages", partitionKey: PartitionKeySpec.id, indexingPolicy: indexingPolicy);
+    cosmosDbContainer.registerBuilder<Messages>(Messages.fromJson);
+      } catch (e) {
+        throw e;
+      }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,27 +64,22 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthProvider(
             firebaseAuth: FirebaseAuth.instance,
             googleSignIn: GoogleSignIn(),
-            prefs: prefs,
-            firebaseFirestore: firebaseFirestore,
-          ),
-        ),
-        Provider<SettingProvider>(
-          create: (_) => SettingProvider(
-            prefs: prefs,
-            firebaseFirestore: firebaseFirestore,
-            firebaseStorage: firebaseStorage,
+            prefs: widget.prefs,
+            cosmosDB: cosmosDbServer
           ),
         ),
         Provider<HomeProvider>(
           create: (_) => HomeProvider(
-            firebaseFirestore: firebaseFirestore,
+            cosmosDbServer: cosmosDbServer
           ),
         ),
         Provider<ChatProvider>(
           create: (_) => ChatProvider(
-            prefs: prefs,
             firebaseFirestore: firebaseFirestore,
+            prefs: widget.prefs,
+            cosmosDbServer: cosmosDbServer,
             firebaseStorage: firebaseStorage,
+            cosmosDbContainer: cosmosDbContainer
           ),
         ),
       ],

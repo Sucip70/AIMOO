@@ -1,6 +1,6 @@
 name: minimal
 description: A minimalistic Flutter website template for blogs and portfolios.
-version: 1.5.0
+version: 1.5.2
 publish_to: none
 
 environment:
@@ -28,6 +28,13 @@ dependencies:
   photo_view: ^0.14.0
   intl: ^0.19.0
   cupertino_icons: ^1.0.6
+  animated_background: ^2.0.0
+  session_storage: ^0.0.1
+  url_launcher: ^6.2.4
+  azure_cosmosdb: ^2.2.1
+  crypto: ^3.0.3
+  encrypt: ^5.0.3
+  universal_io: ^2.2.2
 
 dev_dependencies:
   flutter_test:
@@ -48,3 +55,8 @@ flutter:
   assets:
     - assets/images/
     - images/
+    - assets/images/chatbot-data.png
+  fonts:
+  - family: Noto
+    fonts:
+      - asset: assets/font/NotoColorEmoji-Regular.ttf

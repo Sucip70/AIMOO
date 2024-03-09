@@ -4,8 +4,10 @@ import 'package:minimal/components/color.dart';
 import 'package:minimal/components/spacing.dart';
 import 'package:minimal/components/text.dart';
 import 'package:minimal/components/typography.dart';
-import 'package:minimal/pages/page_post.dart';
-import 'package:minimal/pages/page_typography.dart';
+import 'package:minimal/pages/login_page.dart';
+import 'package:minimal/providers/providers.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ImageWrapper extends StatelessWidget {
   final String image;
@@ -334,7 +336,7 @@ class ListItem extends StatelessWidget {
               child: Container(
                 margin: marginBottom24,
                 child: ReadMoreButton(
-                  onPressed: () => Navigator.pushNamed(context, PostPage.name),
+                  onPressed: () => launchUrl(Uri.parse('https://portal.infobip.com/login/?callback=https%3A%2F%2Fportal.infobip.com%2Fcommunications%2F')),
                 ),
               ),
             ),
@@ -360,8 +362,13 @@ class ListItem extends StatelessWidget {
  * navigation links. Navigation links collapse into
  * a hamburger menu on screens smaller than 400px.
  */
-class MinimalMenuBar extends StatelessWidget {
+class MinimalMenuBar extends StatefulWidget{
   const MinimalMenuBar({Key? key}) : super(key: key);
+  MinimalMenuBarState createState ()=> MinimalMenuBarState();
+}
+
+class MinimalMenuBarState extends State<MinimalMenuBar> {
+  late final AuthProvider authProvider = context.read<AuthProvider>();
 
   @override
   Widget build(BuildContext context) {
@@ -378,18 +385,7 @@ class MinimalMenuBar extends StatelessWidget {
                 splashColor: Colors.transparent,
                 onTap: () => Navigator.popUntil(
                     context, ModalRoute.withName(Navigator.defaultRouteName)),
-                child: RichText(text: TextSpan(
-                  text: 'AI',
-                    style: GoogleFonts.montserrat(color: textPrimary, fontSize: 30, letterSpacing: 3, fontWeight: FontWeight.w500),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: "M",
-                    style: GoogleFonts.montserrat(color: Colors.cyan, fontSize: 32, letterSpacing: 3, fontWeight: FontWeight.w500)),
-                    TextSpan(
-                      text: "OO",
-                    style: GoogleFonts.montserrat(color: textPrimary, fontSize: 30, letterSpacing: 3, fontWeight: FontWeight.w500)),
-                  ]
-                )) 
+                child: const AppTitle(size: 30, color: Colors.black,)
               ),
               Flexible(
                 child: Container(
@@ -405,18 +401,17 @@ class MinimalMenuBar extends StatelessWidget {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {launchUrl(Uri.parse('https://portal.infobip.com/login/?callback=https%3A%2F%2Fportal.infobip.com%2Fcommunications%2F'));},
                         style: menuButtonStyle,
                         child: const Text(
                           "CHATBOT",
                         ),
                       ),
                       TextButton(
-                        onPressed: () =>
-                            Navigator.pushNamed(context, TypographyPage.name),
+                        onPressed: () => handleSignOut(),
                         style: menuButtonStyle,
                         child: const Text(
-                          "ACCOUNT",
+                          "LOGOUT",
                         ),
                       ),
                     ],
@@ -431,5 +426,41 @@ class MinimalMenuBar extends StatelessWidget {
             color: const Color(0xFFEEEEEE)),
       ],
     );
+  }
+
+  Future<void> handleSignOut() async {
+    authProvider.handleSignOut();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginPage()),
+      (Route<dynamic> route) => false,
+    );
+  }
+}
+
+class AppTitle extends StatefulWidget {
+  const AppTitle({super.key, required this.size, required this.color});
+
+  final double size;
+  final Color? color;
+
+  @override
+  State<AppTitle> createState() => _AppTitleState();
+}
+
+class _AppTitleState extends State<AppTitle> {
+  @override
+  Widget build(BuildContext context) {
+    return RichText(text: TextSpan(
+      text: 'AI',
+        style: GoogleFonts.montserrat(color: widget.color, fontSize: widget.size, letterSpacing: 3, fontWeight: FontWeight.w500),
+      children: <TextSpan>[
+        TextSpan(
+          text: "M",
+        style: GoogleFonts.montserrat(color: Colors.cyan, fontSize: widget.size+2, letterSpacing: 3, fontWeight: FontWeight.w500)),
+        TextSpan(
+          text: "OO",
+        style: GoogleFonts.montserrat(color: widget.color, fontSize: widget.size, letterSpacing: 3, fontWeight: FontWeight.w500)),
+      ]
+    ));
   }
 }
