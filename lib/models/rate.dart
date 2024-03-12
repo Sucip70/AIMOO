@@ -10,6 +10,7 @@ class Rate extends BaseDocumentWithEtag {
   Rate._(this.id, this.rate, this.timeStamp);
   Rate(String id, double rate, String timeStamp) : this._(id, rate, timeStamp);
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,

@@ -16,7 +16,6 @@ class ImageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO Listen to inherited widget width updates.
     double width = MediaQuery.of(context).size.width;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 24),
@@ -189,7 +188,6 @@ List<Widget> authorSection({String? imageUrl, String? name, String? bio}) {
 class PostNavigation extends StatelessWidget {
   const PostNavigation({Key? key}) : super(key: key);
 
-  // TODO Get PostID from Global Routing Singleton.
   // Example: String currentPage = RouteController.of(context).currentPage;
   @override
   Widget build(BuildContext context) {
@@ -259,21 +257,19 @@ class ListNavigation extends StatelessWidget {
 class Footer extends StatelessWidget {
   const Footer({Key? key}) : super(key: key);
 
-  // TODO Add additional footer components (i.e. about, links, logos).
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: const Align(
         alignment: Alignment.bottomCenter,
-        child: TextBody(text: "Copyright © 2024"),
+        // child: TextBody(text: "Copyright © 2024"),
       ),
     );
   }
 }
 
 class ListItem extends StatelessWidget {
-  // TODO replace with Post item model.
   final String title;
   final String? imageUrl;
   final String? description;
@@ -364,6 +360,7 @@ class ListItem extends StatelessWidget {
  */
 class MinimalMenuBar extends StatefulWidget{
   const MinimalMenuBar({Key? key}) : super(key: key);
+  @override
   MinimalMenuBarState createState ()=> MinimalMenuBarState();
 }
 
@@ -431,7 +428,7 @@ class MinimalMenuBarState extends State<MinimalMenuBar> {
   Future<void> handleSignOut() async {
     authProvider.handleSignOut();
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
       (Route<dynamic> route) => false,
     );
   }

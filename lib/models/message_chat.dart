@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:minimal/constants/constants.dart';
 
@@ -28,6 +30,7 @@ class MessageChat {
     String idTo = "";
     String timestamp = doc.get(FirestoreConstants.timestamp);
     String content = doc.get(FirestoreConstants.content);
+    log(content);
     return MessageChat(idFrom: idFrom, idTo: idTo, timestamp: timestamp, content: content);
   }
 }

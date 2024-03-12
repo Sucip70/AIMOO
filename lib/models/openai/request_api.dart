@@ -104,9 +104,9 @@ class ListDataSource {
 
   ListDataSource.fromJson(List<Map<String, dynamic>> json) {
     list = <IndexerDataSources>[];
-    json.forEach((element) {
-      list.add(IndexerDataSources.fromJson(element));
-    });
+    for(var j in json){
+      list.add(IndexerDataSources.fromJson(j));
+    }
   }
 }
 

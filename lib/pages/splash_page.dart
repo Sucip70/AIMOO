@@ -9,7 +9,7 @@ import 'pages.dart';
 class SplashPage extends StatefulWidget {
   static const String name = 'load';
 
-  SplashPage({super.key});
+  const SplashPage({super.key});
 
   @override
   SplashPageState createState() => SplashPageState();
@@ -30,15 +30,17 @@ class SplashPageState extends State<SplashPage> {
     bool flag = sessionStorage['isSigned']?.isNotEmpty ?? false; 
 
     if (isLoggedIn || flag) {
+      // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ListPage()),
+        MaterialPageRoute(builder: (context) => const ListPage()),
       );
       return;
     }
+      // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
     );
     return;
   }
@@ -55,8 +57,8 @@ class SplashPageState extends State<SplashPage> {
               width: 100,
               height: 100,
             ),
-            SizedBox(height: 20),
-            Container(
+            const SizedBox(height: 20),
+            const SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(color: ColorConstants.themeColor),

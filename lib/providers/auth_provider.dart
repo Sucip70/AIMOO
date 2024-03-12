@@ -1,13 +1,10 @@
 import 'package:azure_cosmosdb/azure_cosmosdb.dart';
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:minimal/constants/constants.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:minimal/models/cosmosdb_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 enum Status {
   uninitialized,
@@ -21,7 +18,6 @@ enum Status {
 class AuthProvider extends ChangeNotifier {
   final GoogleSignIn googleSignIn;
   final FirebaseAuth firebaseAuth;
-  // final FirebaseFirestore firebaseFirestore;
   final CosmosDbServer cosmosDB;
   final SharedPreferences prefs;
 
@@ -34,7 +30,6 @@ class AuthProvider extends ChangeNotifier {
     required this.googleSignIn,
     required this.prefs,
     required this.cosmosDB
-    // required this.firebaseFirestore,
   });
 
   String? getUserFirebaseId() {
@@ -127,73 +122,9 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> handleSignOut() async {
     _status = Status.uninitialized;
-    // await firebaseAuth.signOut();
+    await firebaseAuth.signOut();
     await googleSignIn.disconnect();
     await googleSignIn.signOut();
   }
-
-  String getMasterKey(String verb, String url, String type, String version){
-    Codec<String, String> stringToBase64 = utf8.fuse(base64);
-    var u8 = base64Decode(AppConstants.masterKey);
-    var key = String.fromCharCodes(u8);
-    var dateUtc = getDateUTC(); //utc
-
-    var urlRegExp = RegExp(r'/^https?:\/\/.*\.documents\.azure\.com(?::\d+)?(?:\/([^\/]+)(?:\/([^\/]+)?)?)+$/i');
-    var parsedUrl = urlRegExp.stringMatch(url);
-    // Get resource type from URL
-    String resourceType = parsedUrl?[1] ?? "";
-    // Get resource ID from URL, if it is not present, we are getting undefined.
-    String resourceId = parsedUrl?[2] ?? "";
-
-    var resourceLinkPattern = RegExp(r'/^https?:\/\/.*\.documents\.azure\.com(?::\d+)?\/(.*)$/i');
-    var parsedResourceLink = resourceLinkPattern.stringMatch(url);
-    String rlink = parsedResourceLink?[1].toString() ?? "";
-
-    String resourceLink = rlink[rlink.length-1] == "/"?
-        rlink.substring(rlink.length-1):
-        parsedResourceLink?[1] ?? "";
-    // Resource Link will be just: dbs/MyCollection
-    if(resourceId == "") { // Resource Id not provided
-        // We need to cut last part to left just Resource Id
-        resourceLink = resourceLink.substring(0, resourceLink.lastIndexOf('/'));
-    }
-    // See: https://docs.microsoft.com/en-us/rest/api/cosmos-db/access-control-on-cosmosdb-resources
-    var text = (verb ?? "").toLowerCase() + "\n" +
-                (resourceType ?? "").toLowerCase() + "\n" +
-                (resourceLink ?? "") + "\n" +
-                dateUtc.toLowerCase() + "\n\n";
-    // Build key to authorize request.
-
-    var hmacSha256 = Hmac(sha256, utf8.encode(key));
-    var signature = hmacSha256.convert(utf8.encode(text));
-    // Code key as base64 to be sent.
-    var signature_base64 = stringToBase64.encode(signature.toString());
-    // Build autorization token and encode it as URI to be sent.
-    var authorizationToken = Uri.encodeFull("type=" + type + "&ver=" + version + "&sig=" + signature_base64);
-    return authorizationToken;
-  }
-
-  String getDateUTC(){
-    var dateTime = DateTime.now();
-    var val      = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").format(dateTime);
-    var offset   = dateTime.timeZoneOffset;
-    var hours    = offset.inHours > 0 ? offset.inHours : 1; // For fixing divide by 0
-
-    if (!offset.isNegative) {
-      val = val +
-          "+" +
-          offset.inHours.toString().padLeft(2, '0') +
-          ":" +
-          (offset.inMinutes % (hours * 60)).toString().padLeft(2, '0');
-    } else {
-      val = val +
-          "-" +
-          (-offset.inHours).toString().padLeft(2, '0') +
-          ":" +
-          (offset.inMinutes % (hours * 60)).toString().padLeft(2, '0');
-    }
-    return val;
-  }
-
 }
 

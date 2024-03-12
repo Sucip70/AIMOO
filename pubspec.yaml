@@ -1,6 +1,6 @@
 name: minimal
 description: A minimalistic Flutter website template for blogs and portfolios.
-version: 1.5.2
+version: 1.5.3
 publish_to: none
 
 environment:
@@ -35,6 +35,10 @@ dependencies:
   crypto: ^3.0.3
   encrypt: ^5.0.3
   universal_io: ^2.2.2
+  get: ^4.6.6
+  http: ^1.2.0
+  web_socket_channel: ^2.4.0
+  dart_openai: ^5.1.0
 
 dev_dependencies:
   flutter_test:

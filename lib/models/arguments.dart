@@ -61,6 +61,7 @@ class Arguments {
       "presence_penalty": double.parse(peerPresPenalty),
       "max_tokens": int.parse(peerMaxTokens),
       "stop": peerStop,
+      "stream": true,
       "dataSources": [
           {
               "type": "AzureCognitiveSearch",

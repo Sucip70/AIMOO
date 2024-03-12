@@ -23,8 +23,9 @@ void main() async {
 }
 class MyApp extends StatefulWidget {
   final SharedPreferences prefs;
-  MyApp({super.key, required this.prefs});
+  const MyApp({super.key, required this.prefs});
 
+  @override
   MyAppState createState () => MyAppState();
 }
 class MyAppState extends State<MyApp> {
@@ -35,6 +36,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   void initState(){
+    super.initState();
     _init();
   }
 
@@ -52,7 +54,7 @@ class MyAppState extends State<MyApp> {
     cosmosDbContainer = await db.containers.openOrCreate("messages", partitionKey: PartitionKeySpec.id, indexingPolicy: indexingPolicy);
     cosmosDbContainer.registerBuilder<Messages>(Messages.fromJson);
       } catch (e) {
-        throw e;
+        rethrow;
       }
   }
 
@@ -68,18 +70,12 @@ class MyAppState extends State<MyApp> {
             cosmosDB: cosmosDbServer
           ),
         ),
-        Provider<HomeProvider>(
-          create: (_) => HomeProvider(
-            cosmosDbServer: cosmosDbServer
-          ),
-        ),
         Provider<ChatProvider>(
           create: (_) => ChatProvider(
             firebaseFirestore: firebaseFirestore,
             prefs: widget.prefs,
             cosmosDbServer: cosmosDbServer,
-            firebaseStorage: firebaseStorage,
-            cosmosDbContainer: cosmosDbContainer
+            firebaseStorage: firebaseStorage
           ),
         ),
       ],
@@ -114,18 +110,9 @@ class MyAppState extends State<MyApp> {
     switch (name) {
       case '/':
       case SplashPage.name:
-        return SplashPage();
+        return const SplashPage();
       case ListPage.name:
         return const ListPage();
-      case PostPage.name:
-        // Custom "per-page" breakpoints.
-        return const ResponsiveBreakpoints(breakpoints: [
-          Breakpoint(start: 0, end: 480, name: MOBILE),
-          Breakpoint(start: 481, end: 1200, name: TABLET),
-          Breakpoint(start: 1201, end: double.infinity, name: DESKTOP),
-        ], child: PostPage());
-      case TypographyPage.name:
-        return const TypographyPage();
       default:
         return const SizedBox.shrink();
     }

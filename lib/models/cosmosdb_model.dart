@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:azure_cosmosdb/azure_cosmosdb.dart';
-import 'package:minimal/constants/constants.dart';
 
 class CosmosDB{
   final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -50,100 +49,6 @@ class Users extends BaseDocumentWithEtag {
     );
     users.setEtag(json);
     return users;
-  }
-}
-
-class Chatbot extends BaseDocumentWithEtag {
-  Chatbot._(
-    this.id,
-    this.createdDate,
-    this.endpoint,
-    this.frequencyPenalty,
-    this.maxTokens,
-    this.nickname,
-    this.presencePenalty,
-    this.searchEndpoint,
-    this.searchIndex,
-    this.searchKey,
-    this.stop,
-    this.system,
-    this.temperature,
-    this.topP,
-  );
-
-  Chatbot(
-    String endpoint,
-    double frequencyPenalty,
-    int maxTokens,
-    String nickname,
-    double presencePenalty,
-    String system,
-    double temperature,
-    double topP,
-    {
-    DateTime? createdDate,
-    String? searchEndpoint,
-    String? searchIndex,
-    String? searchKey,
-    List<String>? stop
-  }) : this._(CosmosDB().getRandomString(20), 
-    createdDate, endpoint, frequencyPenalty, maxTokens, nickname, presencePenalty, searchEndpoint, searchIndex, searchKey
-    , stop, system, temperature, topP);
-
-  @override
-  final String id;
-
-  DateTime? createdDate;
-  String endpoint;
-  double frequencyPenalty;
-  int maxTokens;
-  String nickname;
-  double presencePenalty;
-  String? searchEndpoint;
-  String? searchIndex;
-  String? searchKey;
-  List<String>? stop;
-  String system;
-  double temperature;
-  double topP;
-
-  @override
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'createdDate': createdDate?.toUtc().toIso8601String(),
-        'endpoint' : endpoint,
-        'frequency_penalty' : frequencyPenalty,
-        'max_tokens' : maxTokens,
-        'nickname': nickname,
-        'presence_penalty' : presencePenalty,
-        'search_endpoint' : searchEndpoint,
-        'search_index' : searchIndex,
-        'search_key' : searchKey,
-        'stop' : stop,
-        'system' : system,
-        'temperature' : temperature,
-        'top_p' : topP
-      };
-
-  static Chatbot fromJson(Map json) {
-    final chatbot = Chatbot._(
-      json['id'],
-      DateTime.tryParse(json['createdDate'] ?? '')?.toLocal(),
-      json['endpoint'],
-      double.parse(json['frequency_penalty']),
-      int.parse(json['max_tokens']),
-      json['nickname'],
-      double.parse(json['presence_penalty']),
-      json['search_endpoint'],
-      json['search_index'],
-      json['search_key'],
-      json['stop'] as List<String>,
-      json['system'],
-      double.parse(json['temperature']),
-      double.parse(json['top_p'])
-    );
-    chatbot.setEtag(json);
-    return chatbot;
   }
 }
 
@@ -202,33 +107,6 @@ class Messages extends BaseDocumentWithEtag {
     );
     users.setEtag(json);
     return users;
-  }
-}
-
-class ListMessage{
-  late List<ContentMessage> list;
-
-  ListMessage({required this.list});
-
-  ListMessage.fromJson(List<Map<String, dynamic>> json){
-    list = <ContentMessage>[];
-    json.forEach((element) {
-      list.add(ContentMessage.fromJson(element));
-    });
-  }
-
-  List<Map<String, dynamic>> toJson() {
-    List<Map<String, dynamic>> res = [];
-    for(var i in list){
-      res.add({
-        FirestoreConstants.idFrom: i.idFrom,
-        FirestoreConstants.idTo: i.idTo,
-        FirestoreConstants.timestamp: i.timestamp,
-        FirestoreConstants.content: i.content,
-        FirestoreConstants.type: i.type,
-      });
-    }
-    return res;
   }
 }
 

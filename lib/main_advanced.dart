@@ -39,9 +39,6 @@ class MyApp extends StatelessWidget {
           // Wrap widgets with another widget based on the route.
           // Wrap the page with the ResponsiveScaledBox for desired pages.
           return ConditionalRouteWidget(
-              routesExcluded: const [
-                TypographyPage.name
-              ], // Excluding a page from AutoScale.
               builder: (context, child) => MaxWidthBox(
                     // A widget that limits the maximum width.
                     // This is used to create a gutter area on either side of the content.
@@ -78,10 +75,6 @@ class MyApp extends StatelessWidget {
       case '/':
       case ListPage.name:
         return const ListPage();
-      case PostPage.name:
-        return const PostPage();
-      case TypographyPage.name:
-        return const TypographyPage();
       default:
         return const SizedBox.shrink();
     }

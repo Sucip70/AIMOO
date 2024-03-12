@@ -6,15 +6,15 @@ import 'package:minimal/pages/login_page.dart';
 import 'package:minimal/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
-// TODO Replace with object model.
 const String listItemTitleText = "Customer Chat BOT Services";
 const String listItemPreviewText =
     "This is the place to test chat bots based on customer services. We use the addition of open AI to get humane and heartfelt answers. The web is built using the Flutter framework";
 
 class ListPage extends StatefulWidget {
   static const String name = 'list';
-  const ListPage({Key? key});
-
+  const ListPage({super.key});
+  
+  @override
   ListPageState createState()=> ListPageState();
 }
 
